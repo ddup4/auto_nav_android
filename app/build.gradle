@@ -14,8 +14,23 @@ android {
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+    signingConfigs {
+        extraKeystore100 {
+            storeFile rootProject.file("extra_keystore_100.jks")
+            storePassword "extra100"
+            keyAlias "extra100"
+            keyPassword "extra100"
+        }
+    }
+
     buildTypes {
+        debug {
+            signingConfig signingConfigs.extraKeystore100
+            minifyEnabled false
+        }
         release {
+            signingConfig signingConfigs.extraKeystore100
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
