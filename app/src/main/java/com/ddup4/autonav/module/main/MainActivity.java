@@ -2,12 +2,11 @@ package com.ddup4.autonav.module.main;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
-import com.ddup4.autonav.R;
+import com.ddup4.autonav.app.BaseActivity;
+import com.okandroid.boot.app.ext.dynamic.DynamicFragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     public static Intent startIntent(Context context) {
         Intent starter = new Intent(context, MainActivity.class);
@@ -15,9 +14,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.ddup4_autonav_module_main_view);
+    protected DynamicFragment createDynamicFragment() {
+        return MainFragment.newInstance();
     }
 
 }
