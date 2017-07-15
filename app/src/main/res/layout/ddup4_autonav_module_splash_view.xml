@@ -1,4 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"/>
+<com.okandroid.boot.widget.ContentFullView xmlns:android="http://schemas.android.com/apk/res/android"
+                                           xmlns:tools="http://schemas.android.com/tools"
+                                           android:layout_width="match_parent"
+                                           android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/ddup4_autonav_app_name"
+                android:textColor="#ff282828"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/app_version_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="10dp"
+                android:textColor="#ff666666"
+                android:textSize="12sp"
+                tools:text="v1.2.2"/>
+        </LinearLayout>
+    </FrameLayout>
+</com.okandroid.boot.widget.ContentFullView>

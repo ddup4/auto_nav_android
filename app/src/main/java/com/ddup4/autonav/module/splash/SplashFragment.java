@@ -5,12 +5,15 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.ddup4.autonav.R;
 import com.ddup4.autonav.app.BaseFragment;
 import com.ddup4.autonav.module.main.MainActivity;
+import com.okandroid.boot.App;
 import com.okandroid.boot.app.ext.dynamic.DynamicViewData;
 import com.okandroid.boot.util.IOUtil;
+import com.okandroid.boot.util.ViewUtil;
 
 /**
  * Created by idonans on 2017/2/3.
@@ -67,8 +70,13 @@ public class SplashFragment extends BaseFragment<SplashViewProxy> implements Spl
 
     private class Content extends ContentViewHelper {
 
+        private TextView mAppVersionName;
+
         private Content(@NonNull Activity activity, @NonNull LayoutInflater inflater, @NonNull ViewGroup contentView) {
             super(activity, inflater, contentView, R.layout.ddup4_autonav_module_splash_view);
+
+            mAppVersionName = ViewUtil.findViewByID(mRootView, R.id.app_version_name);
+            mAppVersionName.setText("v " + App.getBuildConfigAdapter().getVersionName());
         }
 
     }

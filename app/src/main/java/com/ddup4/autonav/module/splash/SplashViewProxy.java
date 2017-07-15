@@ -16,7 +16,6 @@ public class SplashViewProxy extends BaseViewProxy<SplashView> {
 
     @Override
     protected DynamicViewData onInitBackground() {
-        Threads.sleepQuietly(2000);
         return new ViewData();
     }
 
@@ -30,6 +29,19 @@ public class SplashViewProxy extends BaseViewProxy<SplashView> {
             return;
         }
 
+        Threads.postUi(new Runnable() {
+            @Override
+            public void run() {
+                tryDirectToMain();
+            }
+        }, 2000L);
+    }
+
+    private void tryDirectToMain() {
+        SplashView view = getView();
+        if (view == null) {
+            return;
+        }
         view.directToMain();
     }
 
