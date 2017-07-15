@@ -1,0 +1,63 @@
+// build config
+
+task gitVersionCodeInit {
+    println 'gitVersionCodeInit'
+
+    // 使用 git commit 总数作为 version code
+    def cmd = 'git rev-list HEAD --count'
+    def gitVersionCode = cmd.execute().text.trim().toInteger()
+    def versionCodeOffset = 0;
+    gitVersionCode += versionCodeOffset;
+    println 'gitVersionCode -> ' + gitVersionCode
+    rootProject.ext.versionCode = gitVersionCode
+}
+
+task gitVersionNameInit {
+    println 'gitVersionNameInit'
+
+    // 使用距离最近的标签名 + '.' + 距离该标签的 commit 数量 作为版本名称, 通常标签使用如 1.0 命名方式
+    // 如果没有标签, 则使用 '0.0' 作为默认值
+    def cmd = 'git describe --tags'
+    def tagDesc = cmd.execute().text.trim()
+    if (!tagDesc) {
+        tagDesc = '0.0'
+    }
+
+    def pattern = '-(\\d+)-g'
+    def matcher = tagDesc =~ pattern
+
+    def tagName
+    def commitCount
+
+    if (matcher) {
+        tagName = tagDesc.substring(0, matcher.start())
+        commitCount = matcher[0][1]
+    } else {
+        tagName = tagDesc;
+        commitCount = '0';
+    }
+
+    def gitVersionName = tagName + '.' + commitCount
+    println 'gitVersionName -> ' + gitVersionName
+    rootProject.ext.versionName = gitVersionName
+}
+
+ext {
+    androidBuild = [
+            compileSdkVersion           : 25,
+            buildToolsVersion           : '25.0.3',
+            minSdkVersion               : 16,
+            targetSdkVersion            : 25,
+            androidSupportLibraryVersion: '25.3.1',
+            versionCode                 : rootProject.ext.versionCode,
+            versionName                 : rootProject.ext.versionName,
+    ]
+
+    println 'rootProject.ext.androidBuild.compileSdkVersion -> ' + rootProject.ext.androidBuild.compileSdkVersion
+    println 'rootProject.ext.androidBuild.buildToolsVersion -> ' + rootProject.ext.androidBuild.buildToolsVersion
+    println 'rootProject.ext.androidBuild.minSdkVersion -> ' + rootProject.ext.androidBuild.minSdkVersion
+    println 'rootProject.ext.androidBuild.targetSdkVersion -> ' + rootProject.ext.androidBuild.targetSdkVersion
+    println 'rootProject.ext.androidBuild.androidSupportLibraryVersion -> ' + rootProject.ext.androidBuild.androidSupportLibraryVersion
+    println 'rootProject.ext.androidBuild.versionCode -> ' + rootProject.ext.androidBuild.versionCode
+    println 'rootProject.ext.androidBuild.versionName -> ' + rootProject.ext.androidBuild.versionName
+}
