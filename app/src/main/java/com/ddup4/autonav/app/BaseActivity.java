@@ -1,10 +1,10 @@
 package com.ddup4.autonav.app;
 
-import com.okandroid.boot.app.OKAndroidActivity;
+import com.okandroid.boot.app.ext.dynamic.DynamicActivity;
 
 /**
  * Created by idonans on 2017/7/15.
  */
 
-public class BaseActivity extends OKAndroidActivity {
+public abstract class BaseActivity extends DynamicActivity {
 }
