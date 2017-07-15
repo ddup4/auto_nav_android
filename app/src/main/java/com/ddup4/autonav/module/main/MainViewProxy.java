@@ -20,6 +20,7 @@ public class MainViewProxy extends BaseViewProxy<MainView> {
     }
 
     class ViewData implements DynamicViewData {
+
     }
 
     @Override

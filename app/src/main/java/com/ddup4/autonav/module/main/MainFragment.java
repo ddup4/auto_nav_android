@@ -52,6 +52,7 @@ public class MainFragment extends BaseFragment<MainViewProxy> implements MainVie
 
         private Content(@NonNull Activity activity, @NonNull LayoutInflater inflater, @NonNull ViewGroup contentView) {
             super(activity, inflater, contentView, R.layout.ddup4_autonav_module_main_view);
+
         }
 
     }
