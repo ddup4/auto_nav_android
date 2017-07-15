@@ -49,4 +49,11 @@ dependencies {
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
     testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
     compile 'com.okandroid.boot:boot:1.0.15'
+
+    // 3D地图
+    compile 'com.amap.api:3dmap:latest.integration'
+    // 定位功能
+    compile 'com.amap.api:location:latest.integration'
+    // 搜索功能
+    compile 'com.amap.api:search:latest.integration'
 }
