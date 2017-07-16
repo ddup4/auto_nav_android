@@ -10,8 +10,10 @@ import android.widget.TextView;
 import com.ddup4.autonav.R;
 import com.ddup4.autonav.app.BaseFragment;
 import com.ddup4.autonav.module.main.MainActivity;
+import com.ddup4.autonav.util.ToastUtil;
 import com.okandroid.boot.App;
 import com.okandroid.boot.app.ext.dynamic.DynamicViewData;
+import com.okandroid.boot.util.GrantResultUtil;
 import com.okandroid.boot.util.IOUtil;
 import com.okandroid.boot.util.ViewUtil;
 
@@ -20,6 +22,8 @@ import com.okandroid.boot.util.ViewUtil;
  */
 
 public class SplashFragment extends BaseFragment<SplashViewProxy> implements SplashView {
+
+    private static final int PERMISSION_CODE_ALL = 1;
 
     public static SplashFragment newInstance() {
         Bundle args = new Bundle();
@@ -34,6 +38,23 @@ public class SplashFragment extends BaseFragment<SplashViewProxy> implements Spl
     }
 
     @Override
+    public void requestAllPermission(String[] permissions) {
+        requestPermissions(permissions, PERMISSION_CODE_ALL);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (GrantResultUtil.isAllGranted(grantResults)) {
+            ToastUtil.show("权限不足, 请到系统权限设置中允许所有需要权限才能正常使用");
+        } else {
+            SplashViewProxy proxy = getDefaultViewProxy();
+            if (proxy != null) {
+                proxy.onAllPermissionReady();
+            }
+        }
+    }
+
+    @Override
     public boolean directToMain() {
         Activity activity = getAvailableActivity();
         if (activity == null) {
@@ -41,6 +62,7 @@ public class SplashFragment extends BaseFragment<SplashViewProxy> implements Spl
         }
 
         activity.startActivity(MainActivity.startIntent(activity));
+        activity.finish();
         return true;
     }
 

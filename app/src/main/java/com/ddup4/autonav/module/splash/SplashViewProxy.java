@@ -1,5 +1,7 @@
 package com.ddup4.autonav.module.splash;
 
+import android.Manifest;
+
 import com.ddup4.autonav.app.BaseViewProxy;
 import com.okandroid.boot.app.ext.dynamic.DynamicViewData;
 import com.okandroid.boot.thread.Threads;
@@ -32,12 +34,26 @@ public class SplashViewProxy extends BaseViewProxy<SplashView> {
         Threads.postUi(new Runnable() {
             @Override
             public void run() {
-                tryDirectToMain();
+                requestAllPermissions();
             }
         }, 2000L);
     }
 
-    private void tryDirectToMain() {
+    private void requestAllPermissions() {
+        SplashView view = getView();
+        if (view == null) {
+            return;
+        }
+
+        String[] permissions = {Manifest.permission.ACCESS_NETWORK_STATE};
+        view.requestAllPermission(permissions);
+    }
+
+    public void onAllPermissionReady() {
+        directToMain();
+    }
+
+    private void directToMain() {
         SplashView view = getView();
         if (view == null) {
             return;

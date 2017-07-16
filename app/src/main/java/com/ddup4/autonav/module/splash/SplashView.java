@@ -10,4 +10,6 @@ public interface SplashView extends BaseView {
 
     boolean directToMain();
 
+    void requestAllPermission(String[] permissions);
+
 }
