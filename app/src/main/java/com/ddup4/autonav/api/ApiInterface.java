@@ -13,7 +13,7 @@ import retrofit2.http.Query;
 
 public interface ApiInterface {
 
-    @GET("/gpsinfo/getByPhone")
+    @GET("gpsinfo/getByPhone")
     Single<Response<GpsInfo>> getGpsInfo(@Query("phone") String phone);
 
 }

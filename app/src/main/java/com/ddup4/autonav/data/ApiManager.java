@@ -62,14 +62,14 @@ public class ApiManager {
     private void restore() {
         String defaultHost = StorageManager.getInstance().getSetting(KEY_DEFAULT_HOST);
         if (TextUtils.isEmpty(defaultHost)) {
-            defaultHost = "http://192.168.1.1/autonav/";
+            defaultHost = "http://192.168.1.1:8080/autonav/";
         }
         mHost = defaultHost;
     }
 
     private void resetDefaultHost() {
         ToastUtil.show("服务器地址已重置为默认地址");
-        mHost = "http://192.168.1.1/autonav/";
+        mHost = "http://192.168.1.1:8080/autonav/";
     }
 
     private void save() {
