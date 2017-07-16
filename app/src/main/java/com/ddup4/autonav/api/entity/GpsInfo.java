@@ -8,6 +8,6 @@ public class GpsInfo {
 
     public String phone;
     public double latitude;
-    public double longitude;
+    public double longtitude;
 
 }
