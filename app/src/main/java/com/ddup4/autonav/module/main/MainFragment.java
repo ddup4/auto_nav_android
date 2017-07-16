@@ -28,6 +28,8 @@ import com.ddup4.autonav.R;
 import com.ddup4.autonav.app.BaseFragment;
 import com.okandroid.boot.AppContext;
 import com.okandroid.boot.app.ext.dynamic.DynamicViewData;
+import com.okandroid.boot.lang.ClassName;
+import com.okandroid.boot.lang.Log;
 import com.okandroid.boot.util.IOUtil;
 import com.okandroid.boot.util.ViewUtil;
 
@@ -38,6 +40,8 @@ import java.io.IOException;
  */
 
 public class MainFragment extends BaseFragment<MainViewProxy> implements MainView {
+
+    private final String CLASS_NAME = ClassName.valueOf(this);
 
     public static MainFragment newInstance() {
         Bundle args = new Bundle();
@@ -162,7 +166,7 @@ public class MainFragment extends BaseFragment<MainViewProxy> implements MainVie
 
         @Override
         public void onArriveDestination() {
-
+            Log.v(CLASS_NAME, "onArriveDestination");
         }
 
         @Override
@@ -182,7 +186,7 @@ public class MainFragment extends BaseFragment<MainViewProxy> implements MainVie
 
         @Override
         public void onArrivedWayPoint(int i) {
-
+            Log.v(CLASS_NAME, "onArrivedWayPoint", i);
         }
 
         @Override
@@ -232,7 +236,9 @@ public class MainFragment extends BaseFragment<MainViewProxy> implements MainVie
 
         @Override
         public void onCalculateRouteSuccess(int[] ints) {
-            mAMapNavi.startNavi(NaviType.GPS);
+            // mAMapNavi.startNavi(NaviType.GPS);
+
+            mAMapNavi.startNavi(NaviType.EMULATOR);
         }
 
         @Override
