@@ -68,6 +68,7 @@ public class SplashFragment extends BaseFragment<SplashViewProxy> implements Spl
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (!GrantResultUtil.isAllGranted(grantResults)) {
             ToastUtil.show("权限不足, 请到系统权限设置中允许所有需要权限才能正常使用");
+            finishActivity();
         } else {
             SplashViewProxy proxy = getDefaultViewProxy();
             if (proxy != null) {
@@ -84,8 +85,17 @@ public class SplashFragment extends BaseFragment<SplashViewProxy> implements Spl
         }
 
         activity.startActivity(MainActivity.startIntent(activity));
-        activity.finish();
+        finishActivity();
         return true;
+    }
+
+    public void finishActivity() {
+        Activity activity = getAvailableActivity();
+        if (activity == null) {
+            return;
+        }
+
+        activity.finish();
     }
 
     @Override
