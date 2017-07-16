@@ -170,15 +170,18 @@ public class MainFragment extends BaseFragment<MainViewProxy> implements MainVie
 
         @Override
         public void onInitNaviSuccess() {
+            Log.v(CLASS_NAME, "onInitNaviSuccess");
             mNaviInitSuccess = true;
             calculateWithCurrentGpsInfo();
         }
 
         private void calculateWithCurrentGpsInfo() {
             if (mGpsInfo == null) {
+                Log.v(CLASS_NAME, "calculateWithCurrentGpsInfo gps info is null");
                 return;
             }
 
+            Log.v(CLASS_NAME, "calculateWithCurrentGpsInfo", mGpsInfo.phone, mGpsInfo.latitude, mGpsInfo.longitude);
             mAMapNavi.calculateRideRoute(new NaviLatLng(mGpsInfo.latitude, mGpsInfo.longitude));
         }
 
