@@ -150,8 +150,8 @@ public class MainFragment extends BaseFragment<MainViewProxy> implements MainVie
         }
 
         @Override
-        public void onLocationChange(AMapNaviLocation aMapNaviLocation) {
-
+        public void onLocationChange(AMapNaviLocation location) {
+            Log.v(CLASS_NAME, "onLocationChange", location.getCoord());
         }
 
         @Override
@@ -161,7 +161,7 @@ public class MainFragment extends BaseFragment<MainViewProxy> implements MainVie
 
         @Override
         public void onEndEmulatorNavi() {
-
+            Log.v(CLASS_NAME, "onEndEmulatorNavi");
         }
 
         @Override
@@ -201,7 +201,7 @@ public class MainFragment extends BaseFragment<MainViewProxy> implements MainVie
 
         @Override
         public void onNaviInfoUpdated(AMapNaviInfo aMapNaviInfo) {
-
+            Log.v(CLASS_NAME, "onNaviInfoUpdated");
         }
 
         @Override
