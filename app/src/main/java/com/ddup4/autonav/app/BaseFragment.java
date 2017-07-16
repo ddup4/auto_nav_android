@@ -33,4 +33,13 @@ public abstract class BaseFragment<T extends BaseViewProxy> extends DynamicFragm
         return null;
     }
 
+    public void finishActivity() {
+        Activity activity = getAvailableActivity();
+        if (activity == null) {
+            return;
+        }
+
+        activity.finish();
+    }
+
 }

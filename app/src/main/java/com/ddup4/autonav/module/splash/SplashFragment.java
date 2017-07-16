@@ -89,15 +89,6 @@ public class SplashFragment extends BaseFragment<SplashViewProxy> implements Spl
         return true;
     }
 
-    public void finishActivity() {
-        Activity activity = getAvailableActivity();
-        if (activity == null) {
-            return;
-        }
-
-        activity.finish();
-    }
-
     @Override
     protected void showInitLoadingContentView(@NonNull Activity activity, @NonNull LayoutInflater inflater, @NonNull ViewGroup contentView) {
         // ignore

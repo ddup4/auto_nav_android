@@ -274,10 +274,7 @@ public class MainFragment extends BaseFragment<MainViewProxy> implements MainVie
 
         @Override
         public void onNaviCancel() {
-            Activity activity = getAvailableActivity();
-            if (activity != null) {
-                activity.finish();
-            }
+            finishActivity();
         }
 
         @Override
