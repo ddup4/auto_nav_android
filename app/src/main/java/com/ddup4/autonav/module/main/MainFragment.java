@@ -317,11 +317,10 @@ public class MainFragment extends BaseFragment<MainViewProxy> implements MainVie
 
         @Override
         public void onCalculateRouteSuccess(int[] ints) {
+            Log.v(CLASS_NAME, "onCalculateRouteSuccess");
             syncCurrentGpsInfoView();
 
-            // TODO
-            // mAMapNavi.startNavi(NaviType.GPS);
-            mAMapNavi.startNavi(NaviType.EMULATOR);
+            mAMapNavi.startNavi(NaviType.GPS);
         }
 
         @Override
