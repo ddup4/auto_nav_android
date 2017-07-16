@@ -11,6 +11,7 @@ import com.amap.api.navi.AMapNaviListener;
 import com.amap.api.navi.AMapNaviView;
 import com.amap.api.navi.AMapNaviViewListener;
 import com.amap.api.navi.AMapNaviViewOptions;
+import com.amap.api.navi.enums.NaviType;
 import com.amap.api.navi.model.AMapLaneInfo;
 import com.amap.api.navi.model.AMapNaviCameraInfo;
 import com.amap.api.navi.model.AMapNaviCross;
@@ -21,6 +22,7 @@ import com.amap.api.navi.model.AMapServiceAreaInfo;
 import com.amap.api.navi.model.AimLessModeCongestionInfo;
 import com.amap.api.navi.model.AimLessModeStat;
 import com.amap.api.navi.model.NaviInfo;
+import com.amap.api.navi.model.NaviLatLng;
 import com.autonavi.tbt.TrafficFacilityInfo;
 import com.ddup4.autonav.R;
 import com.ddup4.autonav.app.BaseFragment;
@@ -130,7 +132,7 @@ public class MainFragment extends BaseFragment<MainViewProxy> implements MainVie
 
         @Override
         public void onInitNaviSuccess() {
-
+            mAMapNavi.calculateRideRoute(new NaviLatLng(39.925846, 116.435765), new NaviLatLng(39.925846, 116.532765));
         }
 
         @Override
@@ -230,7 +232,7 @@ public class MainFragment extends BaseFragment<MainViewProxy> implements MainVie
 
         @Override
         public void onCalculateRouteSuccess(int[] ints) {
-
+            mAMapNavi.startNavi(NaviType.GPS);
         }
 
         @Override
@@ -284,33 +286,28 @@ public class MainFragment extends BaseFragment<MainViewProxy> implements MainVie
 
         @Override
         public void onNaviMapMode(int i) {
-
         }
 
         @Override
         public void onNaviTurnClick() {
-
         }
 
         @Override
         public void onNextRoadClick() {
-
         }
 
         @Override
         public void onScanViewButtonClick() {
-
         }
 
         @Override
         public void onLockMap(boolean b) {
-
         }
 
         @Override
         public void onNaviViewLoaded() {
-
         }
+
     }
 
 }
