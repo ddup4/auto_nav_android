@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import com.ddup4.autonav.api.ApiInterface;
 import com.ddup4.autonav.util.ToastUtil;
 import com.google.gson.Gson;
+import com.okandroid.boot.data.OkHttpManager;
 import com.okandroid.boot.data.StorageManager;
 
 import retrofit2.Retrofit;
@@ -83,6 +84,7 @@ public class ApiManager {
         try {
             API_HOST.DEFAULT_BASE_URL = mHost;
             Retrofit retrofit = new Retrofit.Builder()
+                    .client(OkHttpManager.getInstance().getOkHttpClient())
                     .baseUrl(API_HOST.DEFAULT_BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create(new Gson()))
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
