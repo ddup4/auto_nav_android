@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.amap.api.navi.AMapNavi;
 import com.amap.api.navi.AMapNaviListener;
@@ -28,10 +30,12 @@ import com.autonavi.tbt.TrafficFacilityInfo;
 import com.ddup4.autonav.R;
 import com.ddup4.autonav.api.entity.GpsInfo;
 import com.ddup4.autonav.app.BaseFragment;
+import com.ddup4.autonav.ext.HostSettingsDialog;
 import com.okandroid.boot.AppContext;
 import com.okandroid.boot.app.ext.dynamic.DynamicViewData;
 import com.okandroid.boot.lang.ClassName;
 import com.okandroid.boot.lang.Log;
+import com.okandroid.boot.lang.ResumedViewClickListener;
 import com.okandroid.boot.util.IOUtil;
 import com.okandroid.boot.util.ViewUtil;
 
@@ -110,8 +114,19 @@ public class MainFragment extends BaseFragment<MainViewProxy> implements MainVie
         private GpsInfo mGpsInfo;
         private boolean mNaviInitSuccess;
 
+        private View mHostSetting;
+        private TextView mGpsInfoNaviView;
+
         private Content(@NonNull Activity activity, @NonNull LayoutInflater inflater, @NonNull ViewGroup contentView) {
             super(activity, inflater, contentView, R.layout.ddup4_autonav_module_main_view);
+            mGpsInfoNaviView = ViewUtil.findViewByID(mRootView, R.id.current_gps_info);
+            mHostSetting = ViewUtil.findViewByID(mRootView, R.id.host_setting);
+            mHostSetting.setOnClickListener(new ResumedViewClickListener(MainFragment.this) {
+                @Override
+                public void onClick(View v, ResumedViewClickListener listener) {
+                    showHostSettingsDialog();
+                }
+            });
 
             mAMapNavi = AMapNavi.getInstance(AppContext.getContext());
             mAMapNavi.addAMapNaviListener(this);
@@ -144,6 +159,15 @@ public class MainFragment extends BaseFragment<MainViewProxy> implements MainVie
             }
 
             calculateWithCurrentGpsInfo();
+        }
+
+        private void showHostSettingsDialog() {
+            Activity activity = getAvailableActivity();
+            if (activity == null) {
+                return;
+            }
+
+            new HostSettingsDialog(activity).show();
         }
 
         protected void onResume() {

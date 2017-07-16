@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="top"
+    android:background="#ff333333"
+    android:paddingTop="24dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="示例(http://192.168.1.1:8080/autonav/)"
+            android:textColor="#ffffffff"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/current_host"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textColor="#ffffffff"
+            android:textSize="12sp"/>
+
+        <EditText
+            android:id="@+id/new_host"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="设置新的服务器地址"
+            android:padding="10dp"
+            android:textColor="#ffffffff"
+            android:textColorHint="#ff666666"
+            android:textSize="12sp"/>
+
+        <Button
+            android:id="@+id/submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="保存"
+            android:textColor="#ffffffff"
+            android:textSize="12sp"/>
+    </LinearLayout>
+</FrameLayout>

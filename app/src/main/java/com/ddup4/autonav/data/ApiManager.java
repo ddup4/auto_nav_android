@@ -3,6 +3,7 @@ package com.ddup4.autonav.data;
 import android.text.TextUtils;
 
 import com.ddup4.autonav.api.ApiInterface;
+import com.ddup4.autonav.util.ToastUtil;
 import com.google.gson.Gson;
 import com.okandroid.boot.data.StorageManager;
 
@@ -52,16 +53,22 @@ public class ApiManager {
     public void setHost(String host) {
         mHost = host;
 
-        save();
         refreshApiInterface();
+
+        save();
     }
 
     private void restore() {
         String defaultHost = StorageManager.getInstance().getSetting(KEY_DEFAULT_HOST);
         if (TextUtils.isEmpty(defaultHost)) {
-            defaultHost = "192.168.0.1";
+            defaultHost = "http://192.168.1.1/autonav/";
         }
         mHost = defaultHost;
+    }
+
+    private void resetDefaultHost() {
+        ToastUtil.show("服务器地址已重置为默认地址");
+        mHost = "http://192.168.1.1/autonav/";
     }
 
     private void save() {
@@ -73,13 +80,20 @@ public class ApiManager {
     }
 
     private void refreshApiInterface() {
-        API_HOST.DEFAULT_BASE_URL = "http://" + mHost + "/autonav/";
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(API_HOST.DEFAULT_BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(new Gson()))
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .build();
-        mDefaultApi = retrofit.create(ApiInterface.class);
+        try {
+            API_HOST.DEFAULT_BASE_URL = mHost;
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(API_HOST.DEFAULT_BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create(new Gson()))
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .build();
+            mDefaultApi = retrofit.create(ApiInterface.class);
+        } catch (Throwable e) {
+            e.printStackTrace();
+
+            resetDefaultHost();
+            refreshApiInterface();
+        }
     }
 
     public static class API_HOST {
