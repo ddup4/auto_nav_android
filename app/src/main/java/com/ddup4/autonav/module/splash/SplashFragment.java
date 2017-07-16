@@ -66,7 +66,7 @@ public class SplashFragment extends BaseFragment<SplashViewProxy> implements Spl
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (GrantResultUtil.isAllGranted(grantResults)) {
+        if (!GrantResultUtil.isAllGranted(grantResults)) {
             ToastUtil.show("权限不足, 请到系统权限设置中允许所有需要权限才能正常使用");
         } else {
             SplashViewProxy proxy = getDefaultViewProxy();
