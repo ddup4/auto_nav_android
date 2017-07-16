@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -138,6 +139,16 @@ public class MainFragment extends BaseFragment<MainViewProxy> implements MainVie
             AMapNaviViewOptions options = mAMapNaviView.getViewOptions();
             options.setSettingMenuEnabled(true);
             mAMapNaviView.setViewOptions(options);
+        }
+
+        private void syncCurrentGpsInfoView() {
+            String text = null;
+            if (mGpsInfo != null) {
+                if (!TextUtils.isEmpty(mGpsInfo.phone)) {
+                    text = "导航前往用户\n" + mGpsInfo.phone;
+                }
+            }
+            mGpsInfoNaviView.setText(text);
         }
 
         public void updateGpsInfo() {
@@ -306,8 +317,10 @@ public class MainFragment extends BaseFragment<MainViewProxy> implements MainVie
 
         @Override
         public void onCalculateRouteSuccess(int[] ints) {
-            // mAMapNavi.startNavi(NaviType.GPS);
+            syncCurrentGpsInfoView();
 
+            // TODO
+            // mAMapNavi.startNavi(NaviType.GPS);
             mAMapNavi.startNavi(NaviType.EMULATOR);
         }
 
