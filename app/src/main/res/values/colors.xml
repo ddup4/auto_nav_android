@@ -1,3 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="ddup4_autonav_window_background">#ff999999</color>
 </resources>

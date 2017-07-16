@@ -1,9 +1,11 @@
 <resources>
 
     <style name="DDUP4_AUTONAV_AppTheme" parent="OKAndroid.Theme">
+        <item name="android:windowBackground">@color/ddup4_autonav_window_background</item>
     </style>
 
     <style name="DDUP4_AUTONAV_AppTheme.Splash" parent="OKAndroid.Theme.Splash">
+        <item name="android:windowBackground">@color/ddup4_autonav_window_background</item>
     </style>
 
 </resources>
