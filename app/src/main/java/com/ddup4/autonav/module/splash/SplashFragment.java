@@ -3,6 +3,7 @@ package com.ddup4.autonav.module.splash;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -12,10 +13,14 @@ import com.ddup4.autonav.app.BaseFragment;
 import com.ddup4.autonav.module.main.MainActivity;
 import com.ddup4.autonav.util.ToastUtil;
 import com.okandroid.boot.App;
+import com.okandroid.boot.AppContext;
 import com.okandroid.boot.app.ext.dynamic.DynamicViewData;
 import com.okandroid.boot.util.GrantResultUtil;
 import com.okandroid.boot.util.IOUtil;
 import com.okandroid.boot.util.ViewUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by idonans on 2017/2/3.
@@ -39,7 +44,24 @@ public class SplashFragment extends BaseFragment<SplashViewProxy> implements Spl
 
     @Override
     public void requestAllPermission(String[] permissions) {
-        requestPermissions(permissions, PERMISSION_CODE_ALL);
+        List<String> missPermission = new ArrayList<>();
+        for (String permission : permissions) {
+            if (GrantResultUtil.isGranted(ContextCompat.checkSelfPermission(AppContext.getContext(), permission))) {
+                continue;
+            }
+
+            missPermission.add(permission);
+        }
+
+        if (missPermission.size() > 0) {
+            requestPermissions(missPermission.toArray(new String[missPermission.size()]), PERMISSION_CODE_ALL);
+        } else {
+            // all permission granted
+            SplashViewProxy proxy = getDefaultViewProxy();
+            if (proxy != null) {
+                proxy.onAllPermissionReady();
+            }
+        }
     }
 
     @Override
