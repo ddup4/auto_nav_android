@@ -145,7 +145,7 @@ public class MainFragment extends BaseFragment<MainViewProxy> implements MainVie
             String text = null;
             if (mGpsInfo != null) {
                 if (!TextUtils.isEmpty(mGpsInfo.phone)) {
-                    text = "导航前往用户\n" + mGpsInfo.phone;
+                    text = "目标用户\n" + mGpsInfo.phone;
                 }
             }
             mGpsInfoNaviView.setText(text);
