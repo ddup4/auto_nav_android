@@ -8,4 +8,6 @@ import com.ddup4.autonav.app.BaseView;
 
 public interface MainView extends BaseView {
 
+    void updateGpsInfo();
+
 }

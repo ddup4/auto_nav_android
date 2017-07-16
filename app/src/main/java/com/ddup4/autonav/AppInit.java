@@ -2,6 +2,7 @@ package com.ddup4.autonav;
 
 import android.content.Context;
 
+import com.ddup4.autonav.data.ApiManager;
 import com.okandroid.boot.App;
 import com.okandroid.boot.data.AppIDManager;
 import com.okandroid.boot.data.FrescoManager;
@@ -50,6 +51,7 @@ public class AppInit {
                     StorageManager.getInstance();
                     FrescoManager.getInstance();
                     AppIDManager.getInstance();
+                    ApiManager.getInstance();
                 } catch (Throwable e) {
                     e.printStackTrace();
                 }

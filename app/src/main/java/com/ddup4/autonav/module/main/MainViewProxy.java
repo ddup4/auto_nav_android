@@ -3,14 +3,23 @@ package com.ddup4.autonav.module.main;
 import android.content.Context;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 
+import com.ddup4.autonav.api.entity.GpsInfo;
+import com.ddup4.autonav.api.entity.Response;
 import com.ddup4.autonav.app.BaseViewProxy;
+import com.ddup4.autonav.data.ApiManager;
 import com.okandroid.boot.AppContext;
 import com.okandroid.boot.app.ext.dynamic.DynamicViewData;
 import com.okandroid.boot.lang.ClassName;
 import com.okandroid.boot.lang.Log;
 
 import java.io.IOException;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by idonans on 2017/2/3.
@@ -31,15 +40,28 @@ public class MainViewProxy extends BaseViewProxy<MainView> {
 
     class ViewData implements DynamicViewData {
 
-        private final TelephonyManager mTelephonyManager = (TelephonyManager) AppContext.getContext().getSystemService(Context.TELEPHONY_SERVICE);
-        private final PhoneStateListener mPhoneStateListener = new PhoneStateListener() {
-            @Override
-            public void onCallStateChanged(int state, String incomingNumber) {
-                Log.v(CLASS_NAME, "onCallStateChanged", getCallStateString(state), incomingNumber);
-            }
-        };
+        private TelephonyManager mTelephonyManager;
+        private PhoneStateListener mPhoneStateListener;
+
+        public GpsInfo gpsInfo;
 
         private ViewData() {
+        }
+
+        private void startTelephonyListen() {
+            mTelephonyManager = (TelephonyManager) AppContext.getContext().getSystemService(Context.TELEPHONY_SERVICE);
+            mPhoneStateListener = new PhoneStateListener() {
+                @Override
+                public void onCallStateChanged(int state, String incomingNumber) {
+                    Log.v(CLASS_NAME, "onCallStateChanged", getCallStateString(state), incomingNumber);
+
+                    if (state == TelephonyManager.CALL_STATE_RINGING) {
+                        if (!TextUtils.isEmpty(incomingNumber)) {
+                            readAndReplaceGpsInfo(incomingNumber);
+                        }
+                    }
+                }
+            };
             mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
         }
 
@@ -60,7 +82,46 @@ public class MainViewProxy extends BaseViewProxy<MainView> {
         }
     }
 
+    private void readAndReplaceGpsInfo(String phone) {
+        replaceDefaultRequestHolder(ApiManager.getInstance().getDefaultApi()
+                .getGpsInfo(phone)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Response<GpsInfo>>() {
+                    @Override
+                    public void accept(@NonNull Response<GpsInfo> response) throws Exception {
+                        MainView view = getView();
+                        if (view == null) {
+                            return;
+                        }
+
+                        if (response.status != 0 || response.data == null) {
+                            return;
+                        }
+
+                        ViewData viewData = (ViewData) getDynamicViewData();
+                        if (viewData == null) {
+                            return;
+                        }
+
+                        viewData.gpsInfo = response.data;
+                        view.updateGpsInfo();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable e) throws Exception {
+                        MainView view = getView();
+                        if (view == null) {
+                            return;
+                        }
+
+                        e.printStackTrace();
+                    }
+                }));
+    }
+
     @Override
+
     public void close() throws IOException {
         super.close();
 
@@ -76,6 +137,13 @@ public class MainViewProxy extends BaseViewProxy<MainView> {
         if (view == null) {
             return;
         }
+
+        ViewData viewData = (ViewData) getDynamicViewData();
+        if (viewData == null) {
+            return;
+        }
+
+        viewData.startTelephonyListen();
 
         // TODO
     }

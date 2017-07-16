@@ -3,6 +3,7 @@ package com.ddup4.autonav.module.main;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -25,6 +26,7 @@ import com.amap.api.navi.model.NaviInfo;
 import com.amap.api.navi.model.NaviLatLng;
 import com.autonavi.tbt.TrafficFacilityInfo;
 import com.ddup4.autonav.R;
+import com.ddup4.autonav.api.entity.GpsInfo;
 import com.ddup4.autonav.app.BaseFragment;
 import com.okandroid.boot.AppContext;
 import com.okandroid.boot.app.ext.dynamic.DynamicViewData;
@@ -92,10 +94,21 @@ public class MainFragment extends BaseFragment<MainViewProxy> implements MainVie
     public void onUpdateContentViewIfChanged() {
     }
 
+    @Override
+    public void updateGpsInfo() {
+        if (mContent != null) {
+            mContent.updateGpsInfo();
+        }
+    }
+
     private class Content extends ContentViewHelper implements AMapNaviListener, AMapNaviViewListener {
 
         protected AMapNaviView mAMapNaviView;
         protected AMapNavi mAMapNavi;
+
+        @Nullable
+        private GpsInfo mGpsInfo;
+        private boolean mNaviInitSuccess;
 
         private Content(@NonNull Activity activity, @NonNull LayoutInflater inflater, @NonNull ViewGroup contentView) {
             super(activity, inflater, contentView, R.layout.ddup4_autonav_module_main_view);
@@ -110,6 +123,27 @@ public class MainFragment extends BaseFragment<MainViewProxy> implements MainVie
             AMapNaviViewOptions options = mAMapNaviView.getViewOptions();
             options.setSettingMenuEnabled(true);
             mAMapNaviView.setViewOptions(options);
+        }
+
+        public void updateGpsInfo() {
+            mAMapNavi.stopNavi();
+
+            MainViewProxy proxy = getDefaultViewProxy();
+            if (proxy == null) {
+                return;
+            }
+
+            MainViewProxy.ViewData viewData = (MainViewProxy.ViewData) proxy.getDynamicViewData();
+            if (viewData == null) {
+                return;
+            }
+
+            mGpsInfo = viewData.gpsInfo;
+            if (!mNaviInitSuccess) {
+                return;
+            }
+
+            calculateWithCurrentGpsInfo();
         }
 
         protected void onResume() {
@@ -136,7 +170,16 @@ public class MainFragment extends BaseFragment<MainViewProxy> implements MainVie
 
         @Override
         public void onInitNaviSuccess() {
-            mAMapNavi.calculateRideRoute(new NaviLatLng(39.925846, 116.435765), new NaviLatLng(39.925846, 116.532765));
+            mNaviInitSuccess = true;
+            calculateWithCurrentGpsInfo();
+        }
+
+        private void calculateWithCurrentGpsInfo() {
+            if (mGpsInfo == null) {
+                return;
+            }
+
+            mAMapNavi.calculateRideRoute(new NaviLatLng(mGpsInfo.latitude, mGpsInfo.longitude));
         }
 
         @Override
