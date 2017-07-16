@@ -15,7 +15,7 @@
 
     <application
         android:name="com.ddup4.autonav.AppApplication"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ddup4_autonav_ic_launcher"
         android:label="@string/ddup4_autonav_app_name"
         android:supportsRtl="true"
         android:theme="@style/DDUP4_AUTONAV_AppTheme"
