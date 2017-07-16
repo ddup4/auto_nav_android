@@ -19,7 +19,7 @@
         android:label="@string/ddup4_autonav_app_name"
         android:supportsRtl="true"
         android:theme="@style/DDUP4_AUTONAV_AppTheme"
-        tools:replace="android:label,android:theme">
+        tools:replace="android:label,android:theme,android:icon">
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="94d389049180ee8ae3c651092933c91d"/>
