@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.okandroid.boot.data.StorageManager;
 
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
@@ -76,6 +77,7 @@ public class ApiManager {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(API_HOST.DEFAULT_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(new Gson()))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
         mDefaultApi = retrofit.create(ApiInterface.class);
     }
