@@ -3,8 +3,6 @@ package com.ddup4.autonav.module.main;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.support.annotation.Nullable;
 
 import com.amap.api.location.AMapLocation;
 import com.ddup4.autonav.app.BaseActivity;
@@ -22,11 +20,9 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-
+    protected void onCreate(Bundle savedInstanceState) {
         mLastLocation = getIntent().getParcelableExtra(EXTRA_LAST_LOCATION);
-
-        super.onCreate(savedInstanceState, persistentState);
+        super.onCreate(savedInstanceState);
     }
 
     @Override
