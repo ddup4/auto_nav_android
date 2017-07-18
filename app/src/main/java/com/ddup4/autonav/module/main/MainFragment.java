@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.amap.api.location.AMapLocation;
 import com.amap.api.navi.AMapNavi;
 import com.amap.api.navi.AMapNaviListener;
 import com.amap.api.navi.AMapNaviView;
@@ -265,7 +266,8 @@ public class MainFragment extends BaseFragment<MainViewProxy> implements MainVie
             if (mLastNaviLocation != null) {
                 return mLastNaviLocation.getCoord();
             }
-            return null;
+            AMapLocation location = ((MainActivity) getActivity()).getLastLocation();
+            return new NaviLatLng(location.getLatitude(), location.getLongitude());
         }
 
         @Override

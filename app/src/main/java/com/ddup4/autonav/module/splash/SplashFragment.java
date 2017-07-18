@@ -8,6 +8,10 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
 import com.ddup4.autonav.R;
 import com.ddup4.autonav.app.BaseFragment;
 import com.ddup4.autonav.module.main.MainActivity;
@@ -15,6 +19,7 @@ import com.ddup4.autonav.util.ToastUtil;
 import com.okandroid.boot.App;
 import com.okandroid.boot.AppContext;
 import com.okandroid.boot.app.ext.dynamic.DynamicViewData;
+import com.okandroid.boot.thread.Threads;
 import com.okandroid.boot.util.GrantResultUtil;
 import com.okandroid.boot.util.IOUtil;
 import com.okandroid.boot.util.ViewUtil;
@@ -78,13 +83,22 @@ public class SplashFragment extends BaseFragment<SplashViewProxy> implements Spl
     }
 
     @Override
-    public boolean directToMain() {
+    public void requestLocation() {
+        if (mContent != null) {
+            mContent.startRequestLocation();
+        }
+    }
+
+    @Override
+    public boolean directToMain(AMapLocation aMapLocation) {
         Activity activity = getAvailableActivity();
         if (activity == null) {
             return false;
         }
 
-        activity.startActivity(MainActivity.startIntent(activity));
+        ToastUtil.show("位置定位成功");
+
+        activity.startActivity(MainActivity.startIntent(activity, aMapLocation));
         finishActivity();
         return true;
     }
@@ -115,6 +129,13 @@ public class SplashFragment extends BaseFragment<SplashViewProxy> implements Spl
 
     private class Content extends ContentViewHelper {
 
+        //声明AMapLocationClient类对象
+        public AMapLocationClient mLocationClient;
+        //声明定位回调监听器
+        public AMapLocationListener mLocationListener;
+        //声明AMapLocationClientOption对象
+        public AMapLocationClientOption mLocationOption;
+
         private TextView mAppVersionName;
 
         private Content(@NonNull Activity activity, @NonNull LayoutInflater inflater, @NonNull ViewGroup contentView) {
@@ -122,6 +143,40 @@ public class SplashFragment extends BaseFragment<SplashViewProxy> implements Spl
 
             mAppVersionName = ViewUtil.findViewByID(mRootView, R.id.app_version_name);
             mAppVersionName.setText("v " + App.getBuildConfigAdapter().getVersionName());
+
+        }
+
+        public void startRequestLocation() {
+            ToastUtil.show("正在定位您的位置");
+            //初始化定位
+            mLocationClient = new AMapLocationClient(AppContext.getContext());
+            mLocationListener = new AMapLocationListener() {
+                @Override
+                public void onLocationChanged(final AMapLocation aMapLocation) {
+                    Threads.runOnUi(new Runnable() {
+                        @Override
+                        public void run() {
+                            SplashViewProxy proxy = getDefaultViewProxy();
+                            if (proxy != null) {
+                                proxy.onCurrentLocationFound(aMapLocation);
+                            }
+                        }
+                    });
+                }
+            };
+            //设置定位回调监听
+            mLocationClient.setLocationListener(mLocationListener);
+            //初始化AMapLocationClientOption对象
+            mLocationOption = new AMapLocationClientOption();
+            //设置定位模式为AMapLocationMode.Hight_Accuracy，高精度模式。
+            mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+            mLocationOption.setOnceLocation(true);
+            mLocationOption.setOnceLocationLatest(true);
+
+            //给定位客户端对象设置定位参数
+            mLocationClient.setLocationOption(mLocationOption);
+            //启动定位
+            mLocationClient.startLocation();
         }
 
     }

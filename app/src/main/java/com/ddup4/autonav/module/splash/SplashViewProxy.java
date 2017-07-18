@@ -2,6 +2,7 @@ package com.ddup4.autonav.module.splash;
 
 import android.Manifest;
 
+import com.amap.api.location.AMapLocation;
 import com.ddup4.autonav.app.BaseViewProxy;
 import com.okandroid.boot.app.ext.dynamic.DynamicViewData;
 import com.okandroid.boot.thread.Threads;
@@ -59,15 +60,28 @@ public class SplashViewProxy extends BaseViewProxy<SplashView> {
     }
 
     public void onAllPermissionReady() {
-        directToMain();
+        requestCurrentLocation();
     }
 
-    private void directToMain() {
+    private void requestCurrentLocation() {
         SplashView view = getView();
         if (view == null) {
             return;
         }
-        view.directToMain();
+
+        view.requestLocation();
+    }
+
+    public void onCurrentLocationFound(AMapLocation aMapLocation) {
+        directToMain(aMapLocation);
+    }
+
+    private void directToMain(AMapLocation aMapLocation) {
+        SplashView view = getView();
+        if (view == null) {
+            return;
+        }
+        view.directToMain(aMapLocation);
     }
 
 }

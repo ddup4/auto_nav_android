@@ -23,6 +23,7 @@
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="94d389049180ee8ae3c651092933c91d"/>
+        <service android:name="com.amap.api.location.APSService"/>
 
         <activity
             android:name="com.ddup4.autonav.module.main.MainActivity"

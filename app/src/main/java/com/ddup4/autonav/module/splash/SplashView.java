@@ -1,5 +1,6 @@
 package com.ddup4.autonav.module.splash;
 
+import com.amap.api.location.AMapLocation;
 import com.ddup4.autonav.app.BaseView;
 
 /**
@@ -8,8 +9,10 @@ import com.ddup4.autonav.app.BaseView;
 
 public interface SplashView extends BaseView {
 
-    boolean directToMain();
+    boolean directToMain(AMapLocation aMapLocation);
 
     void requestAllPermission(String[] permissions);
+
+    void requestLocation();
 
 }
