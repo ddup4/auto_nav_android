@@ -1,9 +1,11 @@
 package com.ddup4.autonav.module.main;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +34,7 @@ import com.ddup4.autonav.R;
 import com.ddup4.autonav.api.entity.GpsInfo;
 import com.ddup4.autonav.app.BaseFragment;
 import com.ddup4.autonav.ext.HostSettingsDialog;
+import com.ddup4.autonav.util.ToastUtil;
 import com.okandroid.boot.AppContext;
 import com.okandroid.boot.app.ext.dynamic.DynamicViewData;
 import com.okandroid.boot.lang.ClassName;
@@ -71,6 +74,51 @@ public class MainFragment extends BaseFragment<MainViewProxy> implements MainVie
     }
 
     @Override
+    public void showStartNavConfirm(final GpsInfo gpsInfo) {
+        new AlertDialog.Builder(getActivity())
+                .setMessage("读取到目标(" + gpsInfo.phone + ")位置信息" + "\n"
+                        + "(" + gpsInfo.latitude + "," + gpsInfo.longtitude + ")\n"
+                        + "是否开始导航?")
+                .setPositiveButton("开始导航", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (mContent != null) {
+                            mContent.updateGpsInfo(gpsInfo);
+                        }
+                    }
+                })
+                .setNegativeButton("忽略", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // ignore
+                    }
+                })
+                .show();
+    }
+
+    @Override
+    public void showReadGpsInfoConfirm(final String phone) {
+        new AlertDialog.Builder(getActivity())
+                .setMessage("监听到来电 " + phone + "\n" + "是否读取该电话的位置信息?")
+                .setPositiveButton("读取信息", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        MainViewProxy proxy = getDefaultViewProxy();
+                        if (proxy != null) {
+                            proxy.readGpsInfoFromServer(phone);
+                        }
+                    }
+                })
+                .setNegativeButton("忽略", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // ignore
+                    }
+                })
+                .show();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
 
@@ -97,13 +145,6 @@ public class MainFragment extends BaseFragment<MainViewProxy> implements MainVie
 
     @Override
     public void onUpdateContentViewIfChanged() {
-    }
-
-    @Override
-    public void updateGpsInfo() {
-        if (mContent != null) {
-            mContent.updateGpsInfo();
-        }
     }
 
     private class Content extends ContentViewHelper implements AMapNaviListener, AMapNaviViewListener {
@@ -151,21 +192,12 @@ public class MainFragment extends BaseFragment<MainViewProxy> implements MainVie
             mGpsInfoNaviView.setText(text);
         }
 
-        public void updateGpsInfo() {
+        public void updateGpsInfo(GpsInfo gpsInfo) {
             mAMapNavi.stopNavi();
 
-            MainViewProxy proxy = getDefaultViewProxy();
-            if (proxy == null) {
-                return;
-            }
-
-            MainViewProxy.ViewData viewData = (MainViewProxy.ViewData) proxy.getDynamicViewData();
-            if (viewData == null) {
-                return;
-            }
-
-            mGpsInfo = viewData.gpsInfo;
+            mGpsInfo = gpsInfo;
             if (!mNaviInitSuccess) {
+                ToastUtil.show("等待导航地图初始化完成");
                 return;
             }
 
@@ -216,8 +248,24 @@ public class MainFragment extends BaseFragment<MainViewProxy> implements MainVie
                 return;
             }
 
+            ToastUtil.show("开始计算导航路径");
+
             Log.v(CLASS_NAME, "calculateWithCurrentGpsInfo", mGpsInfo.phone, mGpsInfo.latitude, mGpsInfo.longtitude);
-            mAMapNavi.calculateRideRoute(new NaviLatLng(mGpsInfo.latitude, mGpsInfo.longtitude));
+
+            NaviLatLng currentLocation = getLastLocation();
+            if (currentLocation == null) {
+                ToastUtil.show("当前位置信息不足, 使用系统默认设置");
+                mAMapNavi.calculateRideRoute(new NaviLatLng(mGpsInfo.latitude, mGpsInfo.longtitude));
+            } else {
+                mAMapNavi.calculateRideRoute(currentLocation, new NaviLatLng(mGpsInfo.latitude, mGpsInfo.longtitude));
+            }
+        }
+
+        private NaviLatLng getLastLocation() {
+            if (mLastNaviLocation != null) {
+                return mLastNaviLocation.getCoord();
+            }
+            return null;
         }
 
         @Override
@@ -230,9 +278,12 @@ public class MainFragment extends BaseFragment<MainViewProxy> implements MainVie
 
         }
 
+        private AMapNaviLocation mLastNaviLocation;
+
         @Override
         public void onLocationChange(AMapNaviLocation location) {
             Log.v(CLASS_NAME, "onLocationChange", location.getCoord());
+            mLastNaviLocation = location;
         }
 
         @Override
@@ -317,6 +368,7 @@ public class MainFragment extends BaseFragment<MainViewProxy> implements MainVie
 
         @Override
         public void onCalculateRouteSuccess(int[] ints) {
+            ToastUtil.show("导航路径计算成功, 开始 gps 导航");
             Log.v(CLASS_NAME, "onCalculateRouteSuccess");
             syncCurrentGpsInfoView();
 

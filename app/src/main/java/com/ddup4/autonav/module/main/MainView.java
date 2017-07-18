@@ -1,5 +1,6 @@
 package com.ddup4.autonav.module.main;
 
+import com.ddup4.autonav.api.entity.GpsInfo;
 import com.ddup4.autonav.app.BaseView;
 
 /**
@@ -8,6 +9,8 @@ import com.ddup4.autonav.app.BaseView;
 
 public interface MainView extends BaseView {
 
-    void updateGpsInfo();
+    void showReadGpsInfoConfirm(String phone);
+
+    void showStartNavConfirm(GpsInfo gpsInfo);
 
 }

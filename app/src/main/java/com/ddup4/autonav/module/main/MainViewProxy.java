@@ -9,6 +9,7 @@ import com.ddup4.autonav.api.entity.GpsInfo;
 import com.ddup4.autonav.api.entity.Response;
 import com.ddup4.autonav.app.BaseViewProxy;
 import com.ddup4.autonav.data.ApiManager;
+import com.ddup4.autonav.util.ToastUtil;
 import com.okandroid.boot.AppContext;
 import com.okandroid.boot.app.ext.dynamic.DynamicViewData;
 import com.okandroid.boot.lang.ClassName;
@@ -57,7 +58,7 @@ public class MainViewProxy extends BaseViewProxy<MainView> {
 
                     if (state == TelephonyManager.CALL_STATE_RINGING) {
                         if (!TextUtils.isEmpty(incomingNumber)) {
-                            readAndReplaceGpsInfo(incomingNumber);
+                            showReadGpsInfoConfirm(incomingNumber);
                         }
                     }
                 }
@@ -82,7 +83,16 @@ public class MainViewProxy extends BaseViewProxy<MainView> {
         }
     }
 
-    private void readAndReplaceGpsInfo(String phone) {
+    public void showReadGpsInfoConfirm(String phone) {
+        MainView view = getView();
+        if (view == null) {
+            return;
+        }
+
+        view.showReadGpsInfoConfirm(phone);
+    }
+
+    public void readGpsInfoFromServer(String phone) {
         replaceDefaultRequestHolder(ApiManager.getInstance().getDefaultApi()
                 .getGpsInfo(phone)
                 .subscribeOn(Schedulers.io())
@@ -96,16 +106,11 @@ public class MainViewProxy extends BaseViewProxy<MainView> {
                         }
 
                         if (response.status != 0 || response.data == null) {
+                            ToastUtil.show("位置信息无效");
                             return;
                         }
 
-                        ViewData viewData = (ViewData) getDynamicViewData();
-                        if (viewData == null) {
-                            return;
-                        }
-
-                        viewData.gpsInfo = response.data;
-                        view.updateGpsInfo();
+                        view.showStartNavConfirm(response.data);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -115,6 +120,7 @@ public class MainViewProxy extends BaseViewProxy<MainView> {
                             return;
                         }
 
+                        ToastUtil.show("位置信息读取失败");
                         e.printStackTrace();
                     }
                 }));
