@@ -240,6 +240,13 @@ public class MainFragment extends BaseFragment<MainViewProxy> implements MainVie
         public void onInitNaviSuccess() {
             Log.v(CLASS_NAME, "onInitNaviSuccess");
             mNaviInitSuccess = true;
+
+            // 切换到当前位置
+            NaviLatLng lastLocation = getLastLocation();
+            if (lastLocation != null) {
+                // TODO
+            }
+
             calculateWithCurrentGpsInfo();
         }
 
@@ -305,7 +312,7 @@ public class MainFragment extends BaseFragment<MainViewProxy> implements MainVie
 
         @Override
         public void onCalculateRouteFailure(int i) {
-
+            ToastUtil.show("导航路径计算失败(" + i + ")");
         }
 
         @Override
