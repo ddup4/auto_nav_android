@@ -19,6 +19,8 @@ import com.ddup4.autonav.util.ToastUtil;
 import com.okandroid.boot.App;
 import com.okandroid.boot.AppContext;
 import com.okandroid.boot.app.ext.dynamic.DynamicViewData;
+import com.okandroid.boot.lang.ClassName;
+import com.okandroid.boot.lang.Log;
 import com.okandroid.boot.thread.Threads;
 import com.okandroid.boot.util.GrantResultUtil;
 import com.okandroid.boot.util.IOUtil;
@@ -33,6 +35,7 @@ import java.util.List;
 
 public class SplashFragment extends BaseFragment<SplashViewProxy> implements SplashView {
 
+    private final String CLASS_NAME = ClassName.valueOf(this);
     private static final int PERMISSION_CODE_ALL = 1;
 
     public static SplashFragment newInstance() {
@@ -153,6 +156,10 @@ public class SplashFragment extends BaseFragment<SplashViewProxy> implements Spl
             mLocationListener = new AMapLocationListener() {
                 @Override
                 public void onLocationChanged(final AMapLocation aMapLocation) {
+                    Log.v(CLASS_NAME, "onLocationChanged", aMapLocation);
+                    if (aMapLocation == null) {
+                        return;
+                    }
                     Threads.runOnUi(new Runnable() {
                         @Override
                         public void run() {
@@ -171,7 +178,6 @@ public class SplashFragment extends BaseFragment<SplashViewProxy> implements Spl
             //设置定位模式为AMapLocationMode.Hight_Accuracy，高精度模式。
             mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
             mLocationOption.setOnceLocation(true);
-            mLocationOption.setOnceLocationLatest(true);
 
             //给定位客户端对象设置定位参数
             mLocationClient.setLocationOption(mLocationOption);
