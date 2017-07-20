@@ -40,8 +40,8 @@
                 android:textSize="14sp"/>
         </FrameLayout>
 
-        <com.amap.api.navi.AMapNaviView
-            android:id="@+id/navi_view"
+        <FrameLayout
+            android:id="@+id/map_view_pan"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </LinearLayout>
