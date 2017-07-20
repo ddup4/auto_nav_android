@@ -38,6 +38,9 @@ android {
         }
     }
 
+    linOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
